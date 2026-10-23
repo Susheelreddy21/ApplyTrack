@@ -1,549 +1,302 @@
-
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css';
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const STATUSES = ['Applied', 'Interview', 'Pending', 'Rejected', 'Offer'];
+
+function formatDate(value) {
+  if (!value) return '—';
+  const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+  return Number.isNaN(date.getTime())
+    ? String(value).slice(0, 10)
+    : new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+}
 
 function App() {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All statuses');
   const [showForm, setShowForm] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
 
-  // Calculate dashboard statistics
-  const counts = {
-    total: jobs.length,
-    applied: jobs.filter((job) => job.status === 'Applied').length,
-    interview: jobs.filter((job) => job.status === 'Interview').length,
-    pending: jobs.filter((job) => job.status === 'Pending').length,
-  };
+  const counts = useMemo(() => {
+    const result = { total: jobs.length, Applied: 0, Interview: 0, Pending: 0, Rejected: 0, Offer: 0 };
+    jobs.forEach((job) => {
+      if (Object.prototype.hasOwnProperty.call(result, job.status)) result[job.status] += 1;
+    });
+    return result;
+  }, [jobs]);
 
-  // Filter applications using the search box
-  const filteredJobs = jobs.filter((job) => {
+  const interviewRate = counts.total ? Math.round((counts.Interview / counts.total) * 100) : 0;
+  const filteredJobs = useMemo(() => {
     const query = search.toLowerCase().trim();
+    return jobs.filter((job) => {
+      const matchesSearch = `${job.company || ''} ${job.role || ''}`.toLowerCase().includes(query);
+      const matchesStatus = statusFilter === 'All statuses' || job.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [jobs, search, statusFilter]);
 
-    return (
-      job.company.toLowerCase().includes(query) ||
-      job.role.toLowerCase().includes(query)
-    );
-  });
-
-  // Load applications from the backend
   useEffect(() => {
+    let active = true;
     async function loadJobs() {
       try {
         setApiError('');
-
         const response = await fetch(`${API_URL}/jobs`);
-
-        if (!response.ok) {
-          throw new Error('Could not load applications.');
-        }
-
+        if (!response.ok) throw new Error('Could not load applications.');
         const data = await response.json();
-        setJobs(data);
+        if (active) setJobs(Array.isArray(data) ? data : []);
       } catch (error) {
-        setApiError(
-          'Could not connect to the backend. Make sure your server is running.'
-        );
+        if (active) setApiError('Could not connect to the backend. Make sure your server and MySQL are running.');
         console.error(error);
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     }
-
     loadJobs();
+    return () => { active = false; };
   }, []);
 
-  // Add a new application or edit an existing one
   async function saveApplication(application) {
     try {
       setApiError('');
-
       const isEditing = Boolean(editingJob);
-
-      const url = isEditing
-        ? `${API_URL}/jobs/${editingJob.id}`
-        : `${API_URL}/jobs`;
-
+      const url = isEditing ? `${API_URL}/jobs/${editingJob.id}` : `${API_URL}/jobs`;
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(application),
       });
-
-      const savedJob = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          savedJob.message || 'Could not save application.'
-        );
-      }
-
+      const savedJob = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(savedJob.message || savedJob.error || 'Could not save application.');
       if (isEditing) {
-        setJobs((currentJobs) =>
-          currentJobs.map((job) =>
-            job.id === savedJob.id ? savedJob : job
-          )
-        );
+        setJobs((current) => current.map((job) => job.id === savedJob.id ? savedJob : job));
       } else {
-        setJobs((currentJobs) => [...currentJobs, savedJob]);
+        setJobs((current) => [...current, savedJob]);
       }
-
       setShowForm(false);
       setEditingJob(null);
     } catch (error) {
-      setApiError(
-        error.message || 'Could not save application.'
-      );
+      setApiError(error.message || 'Could not save application.');
       console.error(error);
+      throw error;
     }
   }
 
-  // Update an application's status
-  
-const updateStatus = async (id, newStatus) => {
-  const previousJobs = jobs;
-
-  // Update the UI immediately
-  setJobs((currentJobs) =>
-    currentJobs.map((job) =>
-      job.id === id ? { ...job, status: newStatus } : job
-    )
-  );
-
-  try {
-    const response = await fetch(`${API_URL}/jobs/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        company: jobs.find((job) => job.id === id)?.company,
-        role: jobs.find((job) => job.id === id)?.role,
-        date: jobs.find((job) => job.id === id)?.date?.slice(0, 10),
-        status: newStatus,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || 'Could not update status');
+  async function updateStatus(id, newStatus) {
+    const previousJobs = jobs;
+    const existing = jobs.find((job) => job.id === id);
+    if (!existing) return;
+    setJobs((current) => current.map((job) => job.id === id ? { ...job, status: newStatus } : job));
+    try {
+      const response = await fetch(`${API_URL}/jobs/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company: existing.company,
+          role: existing.role,
+          date: existing.date ? String(existing.date).slice(0, 10) : '',
+          status: newStatus,
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || data.message || 'Could not update status.');
+      setJobs((current) => current.map((job) => job.id === id ? data : job));
+    } catch (error) {
+      console.error('Status update failed:', error);
+      setJobs(previousJobs);
+      setApiError(`Status update failed: ${error.message}`);
     }
-
-    const updatedJob = await response.json();
-
-    setJobs((currentJobs) =>
-      currentJobs.map((job) =>
-        job.id === id ? updatedJob : job
-      )
-    );
-  } catch (error) {
-    console.error('Status update failed:', error);
-    setJobs(previousJobs);
-    alert(`Could not update status: ${error.message}`);
   }
-};
 
-  // Delete an application from the backend
   async function deleteApplication(job) {
-    const confirmed = window.confirm(
-      `Delete the application for ${job.company}?`
-    );
-
-    if (!confirmed) return;
-
+    if (!window.confirm(`Delete the application for ${job.company}?`)) return;
     try {
       setApiError('');
-
-      const response = await fetch(
-        `${API_URL}/jobs/${job.id}`,
-        { method: 'DELETE' }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.message || 'Could not delete application.'
-        );
-      }
-
-      setJobs((currentJobs) =>
-        currentJobs.filter((item) => item.id !== job.id)
-      );
+      const response = await fetch(`${API_URL}/jobs/${job.id}`, { method: 'DELETE' });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.message || result.error || 'Could not delete application.');
+      setJobs((current) => current.filter((item) => item.id !== job.id));
     } catch (error) {
-      setApiError(
-        error.message || 'Could not delete application.'
-      );
+      setApiError(error.message || 'Could not delete application.');
       console.error(error);
     }
+  }
+
+  function openNewForm() {
+    setEditingJob(null);
+    setShowForm(true);
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-shell">
       <aside className="sidebar">
-        <h2 className="brand">
-          ApplyTrack<span>.</span>
-        </h2>
+        <a className="brand" href="#dashboard" aria-label="ApplyTrack home">
+          <span className="brand-mark">A</span>
+          <span>ApplyTrack<span className="brand-dot">.</span></span>
+        </a>
 
-        <p className="nav-heading">WORKSPACE</p>
-        <div className="nav-item active">▦ Dashboard</div>
-        <div className="nav-item">▤ Applications</div>
-        <div className="nav-item">▦ Interviews</div>
+        <div className="sidebar-label">WORKSPACE</div>
+        <nav className="sidebar-nav" aria-label="Main navigation">
+          <a className="nav-link active" href="#dashboard"><span className="nav-icon">▦</span> Dashboard</a>
+          <a className="nav-link" href="#applications"><span className="nav-icon">▤</span> Applications</a>
+          <a className="nav-link" href="#analytics"><span className="nav-icon">◔</span> Analytics</a>
+        </nav>
 
-        <div className="sidebar-bottom">
-          <div className="avatar">S</div>
-          <div>
-            <strong>Job Seeker</strong>
-            <p>My workspace</p>
-          </div>
+        <div className="sidebar-tip">
+          <span className="tip-icon">✦</span>
+          <strong>Small steps add up.</strong>
+          <p>Every application brings you closer to your next opportunity.</p>
+        </div>
+
+        <div className="sidebar-profile">
+          <div className="profile-avatar" aria-hidden="true">S</div>
+          <div className="profile-copy"><strong>Job Seeker</strong><span>Personal workspace</span></div>
+          <span className="profile-menu" aria-hidden="true">•••</span>
         </div>
       </aside>
 
-      <main className="main-content">
+      <main className="main-content" id="dashboard">
         <header className="topbar">
-          <span>My Workspace / Dashboard</span>
-          <span className="today">Your career, organized.</span>
+          <div className="breadcrumb"><span>Workspace</span><span className="breadcrumb-separator">/</span><strong>Dashboard</strong></div>
+          <div className="topbar-right"><span className="live-dot" /> Your career, organized</div>
         </header>
 
-        <section className="welcome">
-          <div>
-            <p className="eyebrow">YOUR JOB SEARCH</p>
-            <h1>Dashboard</h1>
-            <p className="subtitle">
-              Keep track of every opportunity and your next career move.
-            </p>
-          </div>
+        <div className="page-content">
+          <section className="welcome-section">
+            <div className="welcome-copy">
+              <p className="eyebrow">YOUR JOB SEARCH, AT A GLANCE</p>
+              <h1>Good things take <span>progress.</span></h1>
+              <p className="welcome-description">Keep every opportunity in one place and make your next move with confidence.</p>
+            </div>
+            <button className="primary-button add-button" onClick={openNewForm}><span aria-hidden="true">＋</span> Add application</button>
+          </section>
 
-          <button
-            className="primary-button"
-            onClick={() => {
-              setEditingJob(null);
-              setShowForm(true);
-            }}
-          >
-            + Add Application
-          </button>
-        </section>
+          {apiError && <div className="api-error" role="alert"><span>!</span><div>{apiError}</div><button onClick={() => setApiError('')} aria-label="Dismiss error">×</button></div>}
+          {isLoading && <div className="loading-banner" role="status"><span className="spinner" /> Loading your applications…</div>}
 
-        {/* Loading and error messages */}
-        {isLoading && (
-          <p role="status">Loading applications...</p>
-        )}
+          <section className="stats-grid" aria-label="Application summary">
+            <StatCard title="Total applications" value={counts.total} icon="▤" tone="violet" detail="All opportunities tracked" />
+            <StatCard title="Interviews" value={counts.Interview} icon="▣" tone="blue" detail="Conversations in progress" />
+            <StatCard title="Offers received" value={counts.Offer} icon="✦" tone="green" detail="Wins worth celebrating" />
+            <StatCard title="Interview rate" value={`${interviewRate}%`} icon="↗" tone="amber" detail="Interviews ÷ all applications" />
+          </section>
 
-        {apiError && (
-          <p role="alert" className="api-error">
-            {apiError}
-          </p>
-        )}
+          <section className="analytics-grid" id="analytics">
+            <article className="panel status-panel">
+              <div className="panel-heading">
+                <div><p className="eyebrow">YOUR PIPELINE</p><h2>Application overview</h2><p className="panel-subtitle">A snapshot of where things stand.</p></div>
+                <span className="panel-icon">◔</span>
+              </div>
+              <div className="status-list">
+                {STATUSES.map((status) => {
+                  const amount = counts[status];
+                  const percent = counts.total ? Math.round((amount / counts.total) * 100) : 0;
+                  return (
+                    <div className="status-row" key={status}>
+                      <div className="status-row-top"><span className={`status-dot dot-${status.toLowerCase()}`} /><span className="status-name">{status}</span><strong>{amount}</strong><span className="status-percent">{percent}%</span></div>
+                      <div className="progress-track" role="progressbar" aria-label={`${status} applications`} aria-valuenow={percent} aria-valuemin="0" aria-valuemax="100"><span className={`progress-fill fill-${status.toLowerCase()}`} style={{ width: `${percent}%` }} /></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
 
-        <section className="stats-grid">
-          <StatCard
-            title="Total Applications"
-            value={counts.total}
-            icon="▤"
-          />
-          <StatCard
-            title="Applied"
-            value={counts.applied}
-            icon="↗"
-          />
-          <StatCard
-            title="Interviews"
-            value={counts.interview}
-            icon="▣"
-          />
-          <StatCard
-            title="Awaiting Response"
-            value={counts.pending}
-            icon="◷"
-          />
-        </section>
+            <article className="panel focus-panel">
+              <div className="focus-orb" aria-hidden="true"><span>↗</span></div>
+              <p className="eyebrow">KEEP THE MOMENTUM</p>
+              <h2>Your next opportunity starts with one step.</h2>
+              <p className="focus-description">Log new applications, keep statuses current, and use your pipeline to decide where to follow up next.</p>
+              <div className="focus-metrics">
+                <div><strong>{counts.Applied + counts.Pending}</strong><span>Awaiting progress</span></div>
+                <div><strong>{counts.Rejected}</strong><span>Closed applications</span></div>
+              </div>
+              <button className="secondary-button focus-button" onClick={openNewForm}>Track an opportunity <span aria-hidden="true">→</span></button>
+            </article>
+          </section>
 
-        <section className="applications-panel">
-          <div className="panel-heading">
-            <div>
-              <h2>Recent Applications</h2>
-              <p>Manage and monitor your job opportunities.</p>
+          <section className="panel applications-panel" id="applications">
+            <div className="panel-heading applications-heading">
+              <div><p className="eyebrow">YOUR PIPELINE</p><h2>Recent applications</h2><p className="panel-subtitle">Manage and monitor your job opportunities.</p></div>
+              <div className="table-controls">
+                <label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search company or role" value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search applications" /><kbd>⌘ K</kbd></label>
+                <select className="filter-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter by status">
+                  <option>All statuses</option>{STATUSES.map((status) => <option key={status}>{status}</option>)}
+                </select>
+              </div>
             </div>
 
-            <input
-              className="search-input"
-              type="search"
-              placeholder="Search jobs..."
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </div>
-
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>COMPANY &amp; ROLE</th>
-                  <th>DATE APPLIED</th>
-                  <th>STATUS</th>
-                  <th>ACTIONS</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {!isLoading &&
-                  filteredJobs.map((job) => (
+            <div className="table-wrapper">
+              <table>
+                <thead><tr><th>COMPANY &amp; ROLE</th><th>DATE APPLIED</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+                <tbody>
+                  {!isLoading && filteredJobs.map((job) => (
                     <tr key={job.id}>
-                      <td>
-                        <strong>{job.company}</strong>
-                        <span className="role-name">
-                          {job.role}
-                        </span>
-                      </td>
-
-                      <td>{job.date}</td>
-
-                      <td>
-                        <select
-                          className={`status-select status-${job.status.toLowerCase()}`}
-                          value={job.status}
-                          onChange={(event) =>
-                            updateStatus(job.id, event.target.value)
-                          }
-                          aria-label={`Status for ${job.company}`}
-                        >
-                          <option>Applied</option>
-                          <option>Interview</option>
-                          <option>Pending</option>
-                          <option>Rejected</option>
-                          <option>Offer</option>
-                        </select>
-                      </td>
-
-                      <td>
-                        <div className="action-buttons">
-                          <button
-                            className="edit-button"
-                            onClick={() => {
-                              setEditingJob(job);
-                              setShowForm(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            className="delete-button"
-                            onClick={() => deleteApplication(job)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
+                      <td><div className="company-cell"><span className="company-avatar" aria-hidden="true">{(job.company || '?').trim().charAt(0).toUpperCase()}</span><span className="company-details"><strong>{job.company}</strong><span>{job.role}</span></span></div></td>
+                      <td className="date-cell">{formatDate(job.date)}</td>
+                      <td><select className={`status-select status-${String(job.status).toLowerCase()}`} value={job.status} onChange={(event) => updateStatus(job.id, event.target.value)} aria-label={`Status for ${job.company}`}>{STATUSES.map((status) => <option key={status}>{status}</option>)}</select></td>
+                      <td><div className="action-buttons"><button className="text-button edit-button" onClick={() => { setEditingJob(job); setShowForm(true); }}>Edit</button><button className="text-button delete-button" onClick={() => deleteApplication(job)}>Delete</button></div></td>
                     </tr>
                   ))}
+                  {!isLoading && filteredJobs.length === 0 && <tr><td colSpan="4"><div className="empty-state"><span className="empty-icon">▤</span><strong>{search || statusFilter !== 'All statuses' ? 'No matching applications' : 'Your tracker starts here'}</strong><p>{search || statusFilter !== 'All statuses' ? 'Try changing your search or filter.' : 'Add your first application to start building your pipeline.'}</p>{!search && statusFilter === 'All statuses' && <button className="primary-button" onClick={openNewForm}>＋ Add application</button>}</div></td></tr>}
+                </tbody>
+              </table>
+            </div>
+            <div className="table-footer"><span>Showing <strong>{filteredJobs.length}</strong> of <strong>{jobs.length}</strong> applications</span><span>Changes sync with your database</span></div>
+          </section>
 
-                {!isLoading && filteredJobs.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="empty-state">
-                      {search
-                        ? 'No applications match your search.'
-                        : 'No applications yet. Add your first application!'}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+          <footer className="footer"><span>© {new Date().getFullYear()} ApplyTrack</span><span>Stay organized. Keep moving forward.</span></footer>
+        </div>
 
-        <footer className="footer">
-          ApplyTrack · Stay organized. Keep moving forward.
-        </footer>
-
-        {showForm && (
-          <ApplicationForm
-            initialJob={editingJob}
-            onSave={saveApplication}
-            onClose={() => {
-              setShowForm(false);
-              setEditingJob(null);
-            }}
-          />
-        )}
+        {showForm && <ApplicationForm initialJob={editingJob} onSave={saveApplication} onClose={() => { setShowForm(false); setEditingJob(null); }} />}
       </main>
     </div>
   );
 }
 
-function StatCard({ title, value, icon }) {
-  return (
-    <article className="stat-card">
-      <div className="stat-top">
-        <span>{title}</span>
-        <span className="stat-icon">{icon}</span>
-      </div>
-
-      <strong className="stat-value">{value}</strong>
-      <p>Across your tracked opportunities</p>
-    </article>
-  );
+function StatCard({ title, value, icon, tone, detail }) {
+  return <article className="stat-card"><div className={`stat-icon icon-${tone}`} aria-hidden="true">{icon}</div><p className="stat-title">{title}</p><div className="stat-value">{value}</div><p className="stat-detail">{detail}</p></article>;
 }
 
 function ApplicationForm({ onSave, onClose, initialJob }) {
-  const [company, setCompany] = useState(
-    initialJob?.company ?? ''
-  );
-
-  const [role, setRole] = useState(
-    initialJob?.role ?? ''
-  );
-
-  const [date, setDate] = useState(
-    initialJob?.date ?? new Date().toISOString().slice(0, 10)
-  );
-
-  const [status, setStatus] = useState(
-    initialJob?.status ?? 'Applied'
-  );
-
+  const [company, setCompany] = useState(initialJob?.company ?? '');
+  const [role, setRole] = useState(initialJob?.role ?? '');
+  const [date, setDate] = useState(initialJob?.date ? String(initialJob.date).slice(0, 10) : new Date().toISOString().slice(0, 10));
+  const [status, setStatus] = useState(initialJob?.status ?? 'Applied');
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-
-    if (!company.trim() || !role.trim() || !date) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
+    if (!company.trim() || !role.trim() || !date) { setError('Please fill in all required fields.'); return; }
     setError('');
     setIsSaving(true);
-
-    try {
-      await onSave({
-        company: company.trim(),
-        role: role.trim(),
-        date,
-        status,
-      });
-    } finally {
-      setIsSaving(false);
-    }
+    try { await onSave({ company: company.trim(), role: role.trim(), date, status }); }
+    catch (saveError) { setError(saveError.message || 'Could not save application.'); }
+    finally { setIsSaving(false); }
   }
 
-  return (
-    <div
-      className="modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <section
-        className="form-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="form-title"
-      >
-        <div className="modal-header">
-          <div>
-            <p className="eyebrow">JOB TRACKER</p>
-            <h2 id="form-title">
-              {initialJob ? 'Edit Application' : 'Add Application'}
-            </h2>
-            <p className="subtitle">
-              Keep your job search organized.
-            </p>
-          </div>
+  useEffect(() => {
+    function onKeyDown(event) { if (event.key === 'Escape' && !isSaving) onClose(); }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isSaving, onClose]);
 
-          <button
-            type="button"
-            className="close-button"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ×
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="company">Company name *</label>
-          <input
-            id="company"
-            value={company}
-            onChange={(event) => setCompany(event.target.value)}
-            placeholder="e.g. IBM"
-            required
-          />
-
-          <label htmlFor="role">Job title *</label>
-          <input
-            id="role"
-            value={role}
-            onChange={(event) => setRole(event.target.value)}
-            placeholder="e.g. Associate Engineer"
-            required
-          />
-
-          <label htmlFor="date">Application date *</label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-            required
-          />
-
-          <label htmlFor="status">Application status</label>
-          <select
-            id="status"
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-          >
-            <option>Applied</option>
-            <option>Interview</option>
-            <option>Pending</option>
-            <option>Rejected</option>
-            <option>Offer</option>
-          </select>
-
-          {error && (
-            <p className="form-error" role="alert">
-              {error}
-            </p>
-          )}
-
-          <div className="form-actions">
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={onClose}
-              disabled={isSaving}
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              className="primary-button"
-              disabled={isSaving}
-            >
-              {isSaving
-                ? 'Saving...'
-                : initialJob
-                  ? 'Save Changes'
-                  : 'Save Application'}
-            </button>
-          </div>
-        </form>
-      </section>
-    </div>
-  );
+  return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) onClose(); }}>
+    <section className="form-modal" role="dialog" aria-modal="true" aria-labelledby="form-title">
+      <div className="modal-header"><div><p className="eyebrow">JOB TRACKER</p><h2 id="form-title">{initialJob ? 'Edit application' : 'Add an application'}</h2><p className="panel-subtitle">A few details help you keep everything organized.</p></div><button type="button" className="close-button" onClick={onClose} aria-label="Close dialog" disabled={isSaving}>×</button></div>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="company">Company name <span>*</span></label><input id="company" value={company} onChange={(event) => setCompany(event.target.value)} placeholder="e.g. IBM" autoFocus required maxLength={150} />
+        <label htmlFor="role">Job title <span>*</span></label><input id="role" value={role} onChange={(event) => setRole(event.target.value)} placeholder="e.g. Associate Engineer" required maxLength={150} />
+        <label htmlFor="date">Application date <span>*</span></label><input id="date" type="date" value={date} onChange={(event) => setDate(event.target.value)} required />
+        <label htmlFor="status">Application status</label><select id="status" value={status} onChange={(event) => setStatus(event.target.value)}>{STATUSES.map((item) => <option key={item}>{item}</option>)}</select>
+        {error && <p className="form-error" role="alert">{error}</p>}
+        <div className="form-actions"><button type="button" className="secondary-button" onClick={onClose} disabled={isSaving}>Cancel</button><button type="submit" className="primary-button" disabled={isSaving}>{isSaving ? 'Saving…' : initialJob ? 'Save changes' : 'Save application'}</button></div>
+      </form>
+    </section>
+  </div>;
 }
 
 export default App;
