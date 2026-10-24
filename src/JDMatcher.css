@@ -1,0 +1,708 @@
+
+.jd-matcher-section {
+  margin: 28px 0;
+  padding: 28px;
+  background: var(--panel, #ffffff);
+  border: 1px solid #e7e9f0;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(24, 32, 56, 0.04);
+  scroll-margin-top: 24px;
+}
+
+.jd-matcher-heading,
+.jd-form-actions,
+.jd-score-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.jd-matcher-heading h2 {
+  margin: 4px 0 8px;
+  font-size: 24px;
+  color: #20253b;
+}
+
+.jd-matcher-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #efedff;
+  color: #6555d9;
+  font-size: 25px;
+}
+
+.jd-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.jd-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 9px;
+}
+
+.jd-field label {
+  color: #282e43;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.jd-field textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 230px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid #dfe3ec;
+  border-radius: 12px;
+  outline: none;
+  background: #fcfcfe;
+  color: #282e43;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.jd-field textarea:focus {
+  border-color: #7868e8;
+  box-shadow: 0 0 0 3px rgba(120, 104, 232, 0.12);
+}
+
+.jd-field textarea::placeholder {
+  color: #9299aa;
+}
+
+.jd-field-hint {
+  color: #737b90;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.jd-form-actions {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.jd-form-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.jd-error {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #f2c9c9;
+  border-radius: 10px;
+  background: #fff5f5;
+  color: #a62b35;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.jd-results {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #e9ebf2;
+}
+
+.jd-score-card {
+  justify-content: flex-start;
+  padding: 22px;
+  border-radius: 16px;
+  background: linear-gradient(120deg, #f4f2ff, #f8faff);
+}
+
+.jd-score-circle {
+  display: grid;
+  place-items: center;
+  width: 124px;
+  height: 124px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    #7060df var(--jd-score-angle),
+    #e1dff1 var(--jd-score-angle)
+  );
+}
+
+.jd-score-circle > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.jd-score-circle strong {
+  color: #30295f;
+  font-size: 27px;
+  line-height: 1.2;
+}
+
+.jd-score-circle span {
+  margin-top: 4px;
+  color: #72768b;
+  font-size: 11px;
+}
+
+.jd-score-copy {
+  min-width: 0;
+}
+
+.jd-score-copy h3 {
+  margin: 5px 0 8px;
+  color: #292e44;
+  font-size: 19px;
+}
+
+.jd-score-copy p:not(.eyebrow) {
+  margin: 0 0 8px;
+  color: #535b70;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.jd-score-copy small {
+  color: #737b90;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.jd-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.jd-skill-card,
+.jd-suggestions-card {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #e6e9f1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.jd-skill-card h3,
+.jd-suggestions-card h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 16px;
+  color: #292e44;
+  font-size: 16px;
+}
+
+.jd-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 25px;
+  height: 25px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: #f0efff;
+  color: #5b4bc8;
+  font-size: 12px;
+}
+
+.jd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jd-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.jd-chip-match {
+  border: 1px solid #c5e8d3;
+  background: #effaf3;
+  color: #216b42;
+}
+
+.jd-chip-missing {
+  border: 1px solid #f1d8b0;
+  background: #fff8eb;
+  color: #8c5a14;
+}
+
+.jd-skill-card > p,
+.jd-suggestions-card > p {
+  color: #666e81;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.jd-skill-card .jd-small-note {
+  margin: 16px 0 0;
+  font-size: 12px;
+}
+
+/* Default lists */
+.jd-suggestions-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #555d72;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Resume improvement suggestions: consistent bullet and text alignment */
+.jd-suggestions-card .jd-suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.jd-suggestions-card .jd-suggestions-list li {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.jd-suggestions-card .jd-suggestions-list li::before {
+  content: "•";
+  grid-column: 1;
+  color: #596579;
+  line-height: 1.7;
+}
+
+.jd-suggestions-card .jd-suggestions-list li span {
+  grid-column: 2;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .jd-matcher-section {
+    padding: 20px;
+  }
+
+  .jd-input-grid,
+  .jd-skill-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .jd-score-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .jd-score-circle {
+    width: 108px;
+    height: 108px;
+  }
+
+  .jd-score-circle > div {
+    width: 86px;
+    height: 86px;
+  }
+
+  .jd-score-circle strong {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 420px) {
+  .jd-matcher-section {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .jd-matcher-heading {
+    gap: 10px;
+  }
+
+  .jd-matcher-heading h2 {
+    font-size: 21px;
+  }
+
+  .jd-form-actions {
+    flex-wrap: wrap;
+  }
+}
+
+
+
+/* Force correct alignment in the JD Matcher suggestions */
+.jd-matcher-section .jd-results .jd-suggestions-card ul.jd-suggestions-list {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.jd-matcher-section .jd-results .jd-suggestions-card ul.jd-suggestions-list > li {
+  display: grid !important;
+  grid-template-columns: 10px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: start !important;
+  justify-content: start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.jd-matcher-section .jd-results .jd-suggestions-card ul.jd-suggestions-list > li::before {
+  content: "•" !important;
+  display: block !important;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  line-height: 1.7 !important;
+  color: #596579 !important;
+}
+
+.jd-matcher-section .jd-results .jd-suggestions-card ul.jd-suggestions-list > li > span {
+  display: block !important;
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  line-height: 1.7 !important;
+  overflow-wrap: anywhere !important;
+}
+
+
+
+
+.jd-upload-control {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.jd-upload-control > label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #39445b;
+}
+
+.jd-upload-control input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px dashed #b8c4d8;
+  border-radius: 10px;
+  background: #f8faff;
+  color: #39445b;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.jd-upload-control input[type="file"]:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+
+
+/* Resume extraction status */
+.jd-extraction-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 11px 13px;
+  border: 1px solid #b8e2ce;
+  border-radius: 10px;
+  background: #f0fbf5;
+  color: #176642;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* Extracted resume preview */
+.jd-resume-preview {
+  width: 100%;
+  min-width: 0;
+  margin-top: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.jd-resume-preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.jd-preview-eyebrow {
+  margin: 0 0 5px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.jd-resume-preview-heading h3 {
+  margin: 0;
+  color: #17233b;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.jd-preview-file-type {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #edf3ff;
+  color: #315bb5;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.jd-resume-preview-content {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 420px;
+  margin: 0;
+  padding: 14px;
+  box-sizing: border-box;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #253249;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  tab-size: 4;
+}
+
+.jd-preview-footnote {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* Keep upload controls inside the resume column */
+.jd-upload-control {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 12px 0;
+  box-sizing: border-box;
+}
+
+.jd-upload-control > label {
+  color: #39445b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.jd-upload-control input[type="file"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px dashed #b8c4d8;
+  border-radius: 10px;
+  background: #f8faff;
+  color: #39445b;
+  font-size: 13px;
+}
+
+.jd-upload-control input[type="file"]:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Prevent long extracted content from breaking the page layout */
+.jd-field,
+.jd-input-grid,
+.jd-resume-preview,
+.jd-skill-card,
+.jd-suggestions-card {
+  min-width: 0;
+}
+
+.jd-field textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.jd-suggestions-list li {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.jd-suggestions-list li span {
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .jd-resume-preview {
+    padding: 12px;
+  }
+
+  .jd-resume-preview-content {
+    max-height: 320px;
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  .jd-resume-preview-heading h3 {
+    font-size: 14px;
+  }
+}
+
+
+
+/* Fix: align resume and job-description textareas */
+.jd-matcher-section .jd-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto auto auto;
+  column-gap: 20px;
+  row-gap: 9px;
+  align-items: start;
+}
+
+/* Let each field's children participate in the shared grid */
+.jd-matcher-section .jd-input-grid > .jd-field {
+  display: contents;
+}
+
+/* Resume column */
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(1) > label {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(1) .jd-upload-control {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  margin: 0;
+}
+
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(1) textarea {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+/* Job description column */
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(2) > label {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(2) textarea {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+/* Helper text */
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(1) > .jd-field-hint {
+  grid-column: 1;
+  grid-row: 4;
+}
+
+.jd-matcher-section .jd-input-grid > .jd-field:nth-child(2) > .jd-field-hint {
+  grid-column: 2;
+  grid-row: 4;
+}
+
+/* Keep both textareas consistent */
+.jd-matcher-section .jd-input-grid textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 326px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* On smaller screens, restore normal stacked layout */
+@media (max-width: 760px) {
+  .jd-matcher-section .jd-input-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    row-gap: 20px;
+  }
+
+  .jd-matcher-section .jd-input-grid > .jd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .jd-matcher-section .jd-input-grid > .jd-field > label,
+  .jd-matcher-section .jd-input-grid > .jd-field .jd-upload-control,
+  .jd-matcher-section .jd-input-grid > .jd-field textarea,
+  .jd-matcher-section .jd-input-grid > .jd-field > .jd-field-hint {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .jd-matcher-section .jd-input-grid > .jd-field .jd-upload-control {
+    margin: 0;
+  }
+
+  .jd-matcher-section .jd-input-grid textarea {
+    min-height: 260px;
+  }
+}

@@ -1,6 +1,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import JDMatcher from './JDMatcher';
+
 
 const API_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -290,6 +292,10 @@ function App() {
             <span className="nav-icon">◔</span>
             Analytics
           </a>
+          <a className="nav-link" href="#jd-matcher">
+            <span className="nav-icon">▤</span>
+            JD Matcher
+          </a>
         </nav>
 
         <div className="sidebar-tip">
@@ -567,7 +573,8 @@ function App() {
               </div>
             </div>
           </section>
-
+          {/* Resume and Job Description Matcher */}
+          <JDMatcher />
           {/* Applications table */}
           <section
             className="panel applications-panel"
