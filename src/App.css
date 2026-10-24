@@ -1598,3 +1598,147 @@ body {
 
 
 
+/* ApplyTrack analytics panel */
+
+.outcome-panel {
+  margin-top: 24px;
+  padding: 28px;
+}
+
+.outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.outcome-item {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #e8eaf2;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.outcome-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: #59627a;
+  font-size: 13px;
+}
+
+.outcome-item-top strong {
+  color: #202945;
+  font-size: 20px;
+}
+
+.outcome-track {
+  height: 7px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef0f7;
+}
+
+.outcome-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #6958df;
+  transition: width 250ms ease;
+}
+
+.outcome-blue .outcome-track span {
+  background: #3b82f6;
+}
+
+.outcome-green .outcome-track span {
+  background: #10a779;
+}
+
+.outcome-amber .outcome-track span {
+  background: #e7a12b;
+}
+
+.outcome-red .outcome-track span {
+  background: #e05265;
+}
+
+.outcome-item p {
+  margin: 10px 0 0;
+  color: #7b849b;
+  font-size: 12px;
+}
+
+.analytics-insights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+  padding-top: 22px;
+  border-top: 1px solid #e9eaf2;
+}
+
+.analytics-insights > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.analytics-insights span {
+  color: #737c94;
+  font-size: 13px;
+}
+
+.analytics-insights strong {
+  color: #202945;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.analytics-insights p {
+  margin: 0;
+  color: #7b849b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1100px) {
+  .outcome-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .outcome-panel {
+    padding: 20px 16px;
+  }
+
+  .outcome-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .outcome-item {
+    padding: 14px;
+  }
+
+  .analytics-insights {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .outcome-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+
