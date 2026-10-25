@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import './theme.css';
 import JDMatcher from './JDMatcher';
 
 
@@ -31,12 +32,27 @@ function formatDate(value) {
 
 function App() {
   const [jobs, setJobs] = useState([]);
+  const [theme, setTheme] = useState(() => {
+  return localStorage.getItem('applytrack-theme') || 'light';
+});
+
+useEffect(() => {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('applytrack-theme', theme);
+}, [theme]);
+
+const toggleTheme = () => {
+  setTheme((currentTheme) =>
+    currentTheme === 'light' ? 'dark' : 'light'
+  );
+};
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All statuses');
   const [showForm, setShowForm] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   // Calculate analytics from the applications loaded from MySQL.
   const counts = useMemo(() => {
@@ -191,13 +207,14 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          company: existing.company,
-          role: existing.role,
-          date: existing.date
-            ? String(existing.date).slice(0, 10)
-            : '',
-          status: newStatus,
-        }),
+  company: existing.company,
+  role: existing.role,
+  date: existing.date
+    ? String(existing.date).slice(0, 10)
+    : '',
+  status: newStatus,
+  description: existing.description || '',
+}),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -348,13 +365,38 @@ function App() {
               </p>
             </div>
 
-            <button
+            <div className="welcome-actions">
+              
+
+<button
+  type="button"
+  className="theme-toggle"
+  onClick={toggleTheme}
+  aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+  title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+>
+  {theme === 'light' ? (
+    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+    </svg>
+  )}
+</button>
+
+
+
+              <button
               className="primary-button add-button"
               onClick={openNewForm}
             >
               <span aria-hidden="true">＋</span>
               Add application
-            </button>
+              </button>
+            </div>
           </section>
 
           {apiError && (
@@ -647,7 +689,13 @@ function App() {
                             </span>
 
                             <span className="company-details">
-                              <strong>{job.company}</strong>
+                              <button
+  type="button"
+  className="company-name-button"
+  onClick={() => setSelectedJob(job)}
+>
+  {job.company}
+</button>
                               <span>{job.role}</span>
                             </span>
                           </div>
@@ -749,6 +797,139 @@ function App() {
             <span>Stay organized. Keep moving forward.</span>
           </footer>
         </div>
+        
+
+{selectedJob && (
+  <div
+    className="modal-backdrop"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget) {
+        setSelectedJob(null);
+      }
+    }}
+  >
+    <section
+      className="form-modal job-details-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="job-details-title"
+    >
+      <div className="job-details-topline">
+        <span className="job-details-eyebrow">
+          APPLICATION DETAILS
+        </span>
+        <button
+          type="button"
+          className="close-button"
+          onClick={() => setSelectedJob(null)}
+          aria-label="Close job details"
+        >
+          ×
+        </button>
+      </div>
+
+      <div className="job-details-hero">
+        <div className="job-company-icon" aria-hidden="true">
+          {(selectedJob.company || '?')
+            .trim()
+            .charAt(0)
+            .toUpperCase()}
+        </div>
+
+        <div className="job-details-heading">
+          <h2 id="job-details-title">
+            {selectedJob.company}
+          </h2>
+          <p>{selectedJob.role}</p>
+
+          <span
+            className={`job-status-pill status-${String(
+              selectedJob.status || 'Applied'
+            ).toLowerCase()}`}
+          >
+            <span className="job-status-dot" />
+            {selectedJob.status || 'Applied'}
+          </span>
+        </div>
+      </div>
+
+      <div className="job-details-divider" />
+
+      <div className="job-details-metadata">
+        <div className="job-metadata-card">
+          <span className="job-metadata-icon">▦</span>
+          <div>
+            <span className="job-metadata-label">
+              APPLICATION DATE
+            </span>
+            <strong>{formatDate(selectedJob.date)}</strong>
+          </div>
+        </div>
+
+        <div className="job-metadata-card">
+          <span className="job-metadata-icon">◷</span>
+          <div>
+            <span className="job-metadata-label">
+              APPLICATION STATUS
+            </span>
+            <strong>{selectedJob.status || 'Applied'}</strong>
+          </div>
+        </div>
+      </div>
+
+      <section className="job-description-card">
+        <div className="job-description-heading">
+          <div>
+            <h3>Job description</h3>
+            <p>Role overview and requirements</p>
+          </div>
+          <span className="job-description-icon">≡</span>
+        </div>
+
+        <div className="job-description-body">
+          {selectedJob.description?.trim() ? (
+            <p className="job-description-text">
+              {selectedJob.description}
+            </p>
+          ) : (
+            <div className="job-description-empty">
+              <span className="job-empty-icon">＋</span>
+              <strong>No job description yet</strong>
+              <p>
+                Add the job description to keep all the
+                important requirements in one place.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="job-details-footer">
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={() => setSelectedJob(null)}
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          className="primary-button"
+          onClick={() => {
+            setEditingJob(selectedJob);
+            setSelectedJob(null);
+            setShowForm(true);
+          }}
+        >
+          <span aria-hidden="true">✎</span>
+          Edit application
+        </button>
+      </div>
+    </section>
+  </div>
+)}
+
 
         {showForm && (
           <ApplicationForm
@@ -810,6 +991,8 @@ function OutcomeItem({ label, value, total, tone }) {
 function ApplicationForm({ onSave, onClose, initialJob }) {
   const [company, setCompany] = useState(initialJob?.company ?? '');
   const [role, setRole] = useState(initialJob?.role ?? '');
+  const [description, setDescription] = useState(
+  initialJob?.description ?? '');
   const [date, setDate] = useState(
     initialJob?.date
       ? String(initialJob.date).slice(0, 10)
@@ -834,11 +1017,12 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
 
     try {
       await onSave({
-        company: company.trim(),
-        role: role.trim(),
-        date,
-        status,
-      });
+  company: company.trim(),
+  role: role.trim(),
+  date,
+  status,
+  description: description.trim(),
+});
     } catch (saveError) {
       setError(saveError.message || 'Could not save application.');
     } finally {
@@ -921,6 +1105,17 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
             required
             maxLength={150}
           />
+
+          <label htmlFor="description">
+  Job description
+</label>
+<textarea
+  id="description"
+  value={description}
+  onChange={(event) => setDescription(event.target.value)}
+  placeholder="Paste the full job description here..."
+  rows={6}
+/>
 
           <label htmlFor="date">
             Application date <span>*</span>

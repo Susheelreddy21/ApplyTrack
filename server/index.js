@@ -87,7 +87,13 @@ app.get('/api/jobs/:id', async (req, res) => {
 // POST: Add an application
 app.post('/api/jobs', async (req, res) => {
   try {
-    const { company, role, date, status } = req.body;
+    const {
+    company,
+    role,
+    date,
+    status,
+    description = ''
+  } = req.body;
 
     if (
       typeof company !== 'string' ||
@@ -118,11 +124,17 @@ app.post('/api/jobs', async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      `INSERT INTO applications
-       (company, role, date, status)
-       VALUES (?, ?, ?, ?)`,
-      [company.trim(), role.trim(), date, applicationStatus]
-    );
+  `INSERT INTO applications
+   (company, role, date, status, description)
+   VALUES (?, ?, ?, ?, ?)`,
+  [
+    company.trim(),
+    role.trim(),
+    date,
+    applicationStatus,
+    typeof description === 'string' ? description.trim() : ''
+  ]
+);
 
     const [jobs] = await pool.execute(
       'SELECT * FROM applications WHERE id = ?',
@@ -142,7 +154,13 @@ app.post('/api/jobs', async (req, res) => {
 // PUT: Update an application
 app.put('/api/jobs/:id', async (req, res) => {
   try {
-    const { company, role, date, status } = req.body;
+    const {
+  company,
+  role,
+  date,
+  status,
+  description = ''
+} = req.body;
 
     if (
       typeof company !== 'string' ||
@@ -172,11 +190,18 @@ app.put('/api/jobs/:id', async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      `UPDATE applications
-       SET company = ?, role = ?, date = ?, status = ?
-       WHERE id = ?`,
-      [company.trim(), role.trim(), date, status, req.params.id]
-    );
+  `UPDATE applications
+   SET company = ?, role = ?, date = ?, status = ?, description = ?
+   WHERE id = ?`,
+  [
+    company.trim(),
+    role.trim(),
+    date,
+    status,
+    typeof description === 'string' ? description.trim() : '',
+    req.params.id
+  ]
+);
 
     if (result.affectedRows === 0) {
       const [existing] = await pool.execute(

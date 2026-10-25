@@ -1,0 +1,874 @@
+
+/* ==========================================
+   ApplyTrack - Complete Light and Dark Theme
+   ========================================== */
+
+/* LIGHT THEME */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --at-page: #f5f7fb;
+  --at-surface: #ffffff;
+  --at-surface-raised: #f8fafc;
+  --at-text: #172033;
+  --at-muted: #64748b;
+  --at-border: #e2e8f0;
+  --at-hover: #eef2f7;
+  --at-input: #ffffff;
+  --at-shadow: 0 12px 32px rgba(15, 23, 42, 0.07);
+  --at-accent: #6d5dfc;
+}
+
+/* DARK THEME */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --at-page: #0b1020;
+  --at-surface: #121a2b;
+  --at-surface-raised: #1a2539;
+  --at-text: #edf2ff;
+  --at-muted: #a6b3c9;
+  --at-border: #2b3850;
+  --at-hover: #202d43;
+  --at-input: #0e1626;
+  --at-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+  --at-accent: #a99cff;
+}
+
+/* PAGE BACKGROUND */
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  background: var(--at-page);
+}
+
+body {
+  margin: 0;
+  background: var(--at-page);
+  color: var(--at-text);
+}
+
+.app-shell,
+.main-content,
+.page-content {
+  background: var(--at-page);
+  color: var(--at-text);
+}
+
+/* SIDEBAR, PANELS AND CARDS */
+.sidebar,
+.topbar,
+.panel,
+.stat-card,
+.analytics-card,
+.outcome-item,
+.table-wrapper,
+.applications-panel,
+.status-panel,
+.focus-panel,
+.outcome-panel,
+.sidebar-tip,
+.sidebar-profile,
+.job-description-card,
+.job-metadata-card,
+.form-modal,
+.job-details-modal {
+  background-color: var(--at-surface);
+  color: var(--at-text);
+  border-color: var(--at-border);
+  box-shadow: var(--at-shadow);
+}
+
+.sidebar {
+  border-right: 1px solid var(--at-border);
+}
+
+.topbar {
+  border-bottom: 1px solid var(--at-border);
+}
+
+.stat-card,
+.panel,
+.outcome-item,
+.job-metadata-card,
+.job-description-card {
+  border: 1px solid var(--at-border);
+}
+
+/* HEADINGS AND MAIN TEXT */
+.brand,
+.brand > span,
+.breadcrumb,
+.breadcrumb strong,
+.welcome-copy h1,
+.panel h2,
+.panel h3,
+.stat-value,
+.stat-title,
+.stat-detail,
+.company-details,
+.company-name-button,
+.date-cell,
+.table-footer,
+.sidebar-profile strong,
+.sidebar-profile span,
+.job-details-heading h2,
+.job-details-heading p,
+.job-metadata-card strong,
+.job-description-heading h3,
+.job-description-text,
+.modal-header h2,
+.form-modal label {
+  color: var(--at-text);
+}
+
+.eyebrow,
+.welcome-description,
+.panel-subtitle,
+.status-percent,
+.focus-description,
+.analytics-insights p,
+.outcome-item p,
+.sidebar-label,
+.sidebar-tip p,
+.profile-copy span,
+.breadcrumb span,
+.topbar-right,
+.table-footer,
+.job-details-eyebrow,
+.job-metadata-label,
+.job-description-heading p,
+.job-description-empty p,
+.modal-header .panel-subtitle {
+  color: var(--at-muted);
+}
+
+/* SIDEBAR NAVIGATION */
+.nav-link {
+  color: var(--at-muted);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--at-hover);
+  color: var(--at-text);
+}
+
+.sidebar-tip {
+  border: 1px solid var(--at-border);
+}
+
+/* INPUTS AND SELECT MENUS */
+input,
+select,
+textarea,
+.search-box,
+.filter-select {
+  background-color: var(--at-input);
+  color: var(--at-text);
+  border-color: var(--at-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--at-muted);
+  opacity: 1;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--at-accent);
+  outline-color: var(--at-accent);
+}
+
+select option {
+  background: var(--at-surface);
+  color: var(--at-text);
+}
+
+/* APPLICATIONS TABLE */
+table {
+  background: var(--at-surface);
+  color: var(--at-text);
+  border-color: var(--at-border);
+}
+
+thead,
+th {
+  background: var(--at-surface-raised);
+  color: var(--at-muted);
+}
+
+td,
+th {
+  border-color: var(--at-border);
+}
+
+tbody tr:hover {
+  background: var(--at-hover);
+}
+
+.company-name-button {
+  background: transparent;
+}
+
+.company-name-button:hover {
+  color: var(--at-accent);
+}
+
+/* SECONDARY BUTTONS */
+.secondary-button,
+.close-button,
+.text-button {
+  border-color: var(--at-border);
+}
+
+.secondary-button,
+.close-button {
+  background: var(--at-surface-raised);
+  color: var(--at-text);
+}
+
+.secondary-button:hover,
+.close-button:hover {
+  background: var(--at-hover);
+}
+
+/* MODALS AND JOB DETAILS */
+.modal-backdrop {
+  background: rgba(4, 8, 18, 0.68);
+}
+
+.form-modal,
+.job-details-modal {
+  background: var(--at-surface);
+  color: var(--at-text);
+}
+
+.form-modal form label,
+.form-modal label {
+  color: var(--at-text);
+}
+
+.job-details-divider {
+  background: var(--at-border);
+}
+
+.job-details-modal .job-description-body {
+  background: var(--at-surface-raised);
+}
+
+.job-description-empty strong {
+  color: var(--at-text);
+}
+
+/* ERROR, LOADING AND EMPTY STATES */
+.api-error {
+  background: #451c27;
+  color: #fecdd3;
+  border-color: #9f3349;
+}
+
+.loading-banner,
+.empty-state {
+  color: var(--at-muted);
+}
+
+.footer {
+  color: var(--at-muted);
+}
+
+/* HEADER ACTIONS */
+.welcome-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* THEME TOGGLE BUTTON */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--at-border);
+  background: var(--at-surface);
+  color: var(--at-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.theme-toggle span:first-child {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  background: var(--at-hover);
+  transform: translateY(-1px);
+}
+
+/* PRIMARY BUTTON */
+.primary-button {
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .primary-button {
+  background: #7666ff;
+  color: #ffffff;
+  border-color: #7666ff;
+}
+
+:root[data-theme="dark"] .primary-button:hover {
+  background: #8a7dff;
+}
+
+/* DARK THEME DETAILS */
+:root[data-theme="dark"] .live-dot {
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.13);
+}
+
+:root[data-theme="dark"] .company-avatar,
+:root[data-theme="dark"] .job-company-icon {
+  background: #293456;
+  color: #d8d2ff;
+}
+
+:root[data-theme="dark"] .status-select {
+  background-color: var(--at-surface-raised);
+  color: var(--at-text);
+  border-color: var(--at-border);
+}
+
+:root[data-theme="dark"] .status-select option {
+  background: var(--at-surface);
+  color: var(--at-text);
+}
+
+/* APPLICATION STATUS COLORS */
+:root[data-theme="dark"] .status-applied {
+  color: #c4b5fd;
+}
+
+:root[data-theme="dark"] .status-interview {
+  color: #93c5fd;
+}
+
+:root[data-theme="dark"] .status-pending {
+  color: #fcd34d;
+}
+
+:root[data-theme="dark"] .status-rejected {
+  color: #fda4af;
+}
+
+:root[data-theme="dark"] .status-offer {
+  color: #86efac;
+}
+
+/* PROGRESS BARS */
+:root[data-theme="dark"] .progress-track,
+:root[data-theme="dark"] .outcome-track {
+  background: #2b3850;
+}
+
+/* SCROLLBARS */
+* {
+  scrollbar-color: var(--at-border) var(--at-surface);
+}
+
+/* SMOOTH THEME TRANSITIONS */
+* {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 760px) {
+  .welcome-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .welcome-section {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 440px) {
+  .theme-toggle {
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+}
+
+
+
+/* ===== JD Matcher dark mode fix ===== */
+
+:root[data-theme="dark"] .jd-matcher-section {
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-heading h2,
+:root[data-theme="dark"] .jd-field label,
+:root[data-theme="dark"] .jd-score-copy h3,
+:root[data-theme="dark"] .jd-skill-card h3,
+:root[data-theme="dark"] .jd-suggestions-card h3 {
+  color: var(--at-text) !important;
+}
+
+:root[data-theme="dark"] .jd-field textarea {
+  background: var(--at-input) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .jd-field textarea::placeholder {
+  color: var(--at-muted) !important;
+}
+
+:root[data-theme="dark"] .jd-field-hint,
+:root[data-theme="dark"] .jd-score-copy p,
+:root[data-theme="dark"] .jd-score-copy small,
+:root[data-theme="dark"] .jd-skill-card p,
+:root[data-theme="dark"] .jd-suggestions-card p {
+  color: var(--at-muted) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-icon {
+  background: #292448 !important;
+  color: #c4b5fd !important;
+}
+
+:root[data-theme="dark"] .jd-upload-control {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .jd-score-card,
+:root[data-theme="dark"] .jd-skill-card,
+:root[data-theme="dark"] .jd-suggestions-card {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .jd-count {
+  background: #303957 !important;
+  color: #e0e7ff !important;
+}
+
+:root[data-theme="dark"] .jd-error {
+  background: #451c27 !important;
+  color: #fecdd3 !important;
+  border-color: #9f3349 !important;
+}
+
+:root[data-theme="dark"] .jd-chip {
+  border-color: var(--at-border);
+}
+
+
+
+
+/* Fix resume upload control in dark mode */
+
+:root[data-theme="dark"] .jd-upload-control {
+  background-color: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+  border: 1px solid var(--at-border) !important;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+:root[data-theme="dark"] .jd-upload-control input[type="file"] {
+  background-color: #1a2539 !important;
+  color: #edf2ff !important;
+  border: 1px solid #394760 !important;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+:root[data-theme="dark"] .jd-upload-control input[type="file"]::file-selector-button {
+  background-color: #394760;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .jd-upload-control input[type="file"]::file-selector-button:hover {
+  background-color: #536481;
+}
+
+
+
+/* =========================================
+   Theme Toggle - Top Header Right Alignment
+   ========================================= */
+
+/* Make the top header the positioning reference */
+.topbar {
+  position: relative;
+}
+
+/* Leave space so the status text doesn't overlap the icon */
+.topbar-right {
+  padding-right: 58px;
+  box-sizing: border-box;
+}
+
+/* Position the icon inside the header */
+.topbar .theme-toggle {
+  position: absolute !important;
+  top: 12px !important;
+  right: 24px !important;
+  z-index: 100;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--at-border);
+  border-radius: 12px;
+  background: var(--at-surface);
+  color: var(--at-text);
+
+  cursor: pointer;
+  box-shadow: var(--at-shadow);
+}
+
+/* Keep the sun and moon SVG icons clean */
+.topbar .theme-toggle svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Hover effect */
+.topbar .theme-toggle:hover {
+  background: var(--at-hover);
+  transform: translateY(-1px);
+}
+
+/* Mobile positioning */
+@media (max-width: 760px) {
+  .topbar .theme-toggle {
+    top: 10px !important;
+    right: 12px !important;
+  }
+
+  .topbar-right {
+    padding-right: 54px;
+  }
+}
+
+
+/* FINAL FIX: pin theme icon to the top-right of the viewport */
+.topbar .theme-toggle,
+.welcome-actions .theme-toggle {
+  position: fixed !important;
+  top: 12px !important;
+  right: 24px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 99999 !important;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  border: 1px solid var(--at-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--at-shadow);
+  cursor: pointer;
+}
+
+.theme-toggle svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+/* Keep the header status text clear of the icon */
+.topbar-right {
+  padding-right: 58px;
+}
+
+
+
+/* ==========================================
+   FIX: Job Details Popup in Dark Mode
+   ========================================== */
+
+:root[data-theme="dark"] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.78) !important;
+}
+
+:root[data-theme="dark"] .job-details-modal {
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  border: 1px solid var(--at-border) !important;
+  box-shadow: var(--at-shadow) !important;
+}
+
+/* Popup header */
+:root[data-theme="dark"] .job-details-modal .job-details-heading,
+:root[data-theme="dark"] .job-details-modal .modal-header {
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+/* Popup headings and text */
+:root[data-theme="dark"] .job-details-modal h1,
+:root[data-theme="dark"] .job-details-modal h2,
+:root[data-theme="dark"] .job-details-modal h3,
+:root[data-theme="dark"] .job-details-modal h4,
+:root[data-theme="dark"] .job-details-modal p,
+:root[data-theme="dark"] .job-details-modal strong,
+:root[data-theme="dark"] .job-details-modal span,
+:root[data-theme="dark"] .job-details-modal label {
+  color: var(--at-text);
+}
+
+/* Muted labels */
+:root[data-theme="dark"] .job-details-modal .job-details-eyebrow,
+:root[data-theme="dark"] .job-details-modal .job-metadata-label,
+:root[data-theme="dark"] .job-details-modal .panel-subtitle {
+  color: var(--at-muted) !important;
+}
+
+/* Date and status cards */
+:root[data-theme="dark"] .job-details-modal .job-metadata-card {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+  border: 1px solid var(--at-border) !important;
+}
+
+/* Job description section */
+:root[data-theme="dark"] .job-details-modal .job-description-card {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .job-details-modal .job-description-heading {
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  border-color: var(--at-border) !important;
+}
+
+:root[data-theme="dark"] .job-details-modal .job-description-body {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+}
+
+:root[data-theme="dark"] .job-details-modal .job-description-text {
+  color: var(--at-text) !important;
+}
+
+/* Popup buttons */
+:root[data-theme="dark"] .job-details-modal button:not(.primary-button) {
+  color: var(--at-text);
+  border-color: var(--at-border);
+}
+
+:root[data-theme="dark"] .job-details-modal .close-button {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+}
+
+
+
+/* Fix missing icons in the Job Details popup */
+
+:root[data-theme="dark"] .job-details-modal .job-metadata-card span,
+:root[data-theme="dark"] .job-details-modal .job-description-card span {
+  color: inherit;
+}
+
+/* Restore icon visibility inside icon containers */
+:root[data-theme="dark"] .job-details-modal .job-metadata-card svg,
+:root[data-theme="dark"] .job-details-modal .job-description-card svg,
+:root[data-theme="dark"] .job-details-modal button svg {
+  color: #a99cff !important;
+  stroke: #a99cff;
+  opacity: 1 !important;
+}
+
+/* Keep icon backgrounds visible */
+:root[data-theme="dark"] .job-details-modal .job-metadata-card [class*="icon"],
+:root[data-theme="dark"] .job-details-modal .job-description-card [class*="icon"] {
+  background-color: #292448 !important;
+  color: #c4b5fd !important;
+  opacity: 1 !important;
+}
+
+/* Preserve the close button appearance */
+:root[data-theme="dark"] .job-details-modal .close-button {
+  background: var(--at-surface-raised) !important;
+  color: var(--at-text) !important;
+}
+
+:root[data-theme="dark"] .job-details-modal .close-button svg {
+  color: var(--at-text) !important;
+  stroke: currentColor;
+}
+
+
+/* FIX: Pale status pill in the dark-mode application popup */
+
+/* Target the status pill inside the application details header */
+:root[data-theme="dark"] .job-details-modal .job-details-header > div,
+:root[data-theme="dark"] .job-details-modal .job-header > div {
+  box-sizing: border-box;
+}
+
+/* Make pale status badges readable */
+:root[data-theme="dark"] .job-details-modal [class*="status"],
+:root[data-theme="dark"] .job-details-modal [class*="badge"] {
+  color: #86efac !important;
+}
+
+/* Style the pill itself */
+:root[data-theme="dark"] .job-details-modal [class*="status-badge"],
+:root[data-theme="dark"] .job-details-modal [class*="status-pill"],
+:root[data-theme="dark"] .job-details-modal [class*="badge"] {
+  background-color: #263b35 !important;
+  border: 1px solid #376b57 !important;
+  color: #86efac !important;
+}
+
+/* Make any icon inside the pill visible */
+:root[data-theme="dark"] .job-details-modal [class*="status"] svg,
+:root[data-theme="dark"] .job-details-modal [class*="badge"] svg {
+  color: #86efac !important;
+  fill: #86efac !important;
+  stroke: #86efac !important;
+  opacity: 1 !important;
+}
+
+/* Keep the company initial centered */
+:root[data-theme="dark"] .job-details-modal .company-avatar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+
+/* ==========================================
+   1. FIX COMPANY INITIAL ALIGNMENT
+   ========================================== */
+
+:root[data-theme="dark"] .job-details-modal .company-avatar,
+:root[data-theme="dark"] .job-details-modal .job-company-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0;
+  padding: 0 !important;
+  text-align: center !important;
+  box-sizing: border-box;
+}
+
+:root[data-theme="dark"] .job-details-modal .company-avatar > *,
+:root[data-theme="dark"] .job-details-modal .job-company-icon > * {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+/* ==========================================
+   2. FIX COMPANY HEADING ALIGNMENT
+   ========================================== */
+
+:root[data-theme="dark"] .job-details-modal .job-details-heading {
+  align-items: center;
+}
+
+:root[data-theme="dark"] .job-details-modal .job-details-heading h1,
+:root[data-theme="dark"] .job-details-modal .job-details-heading h2 {
+  margin-top: 0;
+}
+
+/* ==========================================
+   3. DARK SCROLLBARS INSIDE THE POPUP
+   ========================================== */
+
+:root[data-theme="dark"] .job-details-modal,
+:root[data-theme="dark"] .job-details-modal * {
+  scrollbar-color: #45536b #141d2e;
+}
+
+:root[data-theme="dark"] .job-details-modal::-webkit-scrollbar,
+:root[data-theme="dark"] .job-details-modal *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+:root[data-theme="dark"] .job-details-modal::-webkit-scrollbar-track,
+:root[data-theme="dark"] .job-details-modal *::-webkit-scrollbar-track {
+  background: #141d2e;
+}
+
+:root[data-theme="dark"] .job-details-modal::-webkit-scrollbar-thumb,
+:root[data-theme="dark"] .job-details-modal *::-webkit-scrollbar-thumb {
+  background: #45536b;
+  border: 2px solid #141d2e;
+  border-radius: 10px;
+}
+
+:root[data-theme="dark"] .job-details-modal::-webkit-scrollbar-thumb:hover,
+:root[data-theme="dark"] .job-details-modal *::-webkit-scrollbar-thumb:hover {
+  background: #65748e;
+}
+
+
+
+/* Fine-tune company name vertical alignment in dark mode */
+:root[data-theme="dark"] .job-details-modal .job-details-heading h1,
+:root[data-theme="dark"] .job-details-modal .job-details-heading h2 {
+  position: relative;
+  top: 27px;
+}
