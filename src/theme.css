@@ -1,4 +1,3 @@
-
 /* ==========================================
    ApplyTrack - Complete Light and Dark Theme
    ========================================== */
@@ -291,7 +290,7 @@ tbody tr:hover {
   flex-wrap: wrap;
 }
 
-/* THEME TOGGLE BUTTON */
+/* General theme toggle styling */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -416,10 +415,7 @@ tbody tr:hover {
   }
 }
 
-
-
 /* ===== JD Matcher dark mode fix ===== */
-
 :root[data-theme="dark"] .jd-matcher-section {
   background: var(--at-surface) !important;
   color: var(--at-text) !important;
@@ -486,11 +482,7 @@ tbody tr:hover {
   border-color: var(--at-border);
 }
 
-
-
-
 /* Fix resume upload control in dark mode */
-
 :root[data-theme="dark"] .jd-upload-control {
   background-color: var(--at-surface-raised) !important;
   color: var(--at-text) !important;
@@ -523,121 +515,9 @@ tbody tr:hover {
   background-color: #536481;
 }
 
-
-
-/* =========================================
-   Theme Toggle - Top Header Right Alignment
-   ========================================= */
-
-/* Make the top header the positioning reference */
-.topbar {
-  position: relative;
-}
-
-/* Leave space so the status text doesn't overlap the icon */
-.topbar-right {
-  padding-right: 58px;
-  box-sizing: border-box;
-}
-
-/* Position the icon inside the header */
-.topbar .theme-toggle {
-  position: absolute !important;
-  top: 12px !important;
-  right: 24px !important;
-  z-index: 100;
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
-  padding: 0 !important;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid var(--at-border);
-  border-radius: 12px;
-  background: var(--at-surface);
-  color: var(--at-text);
-
-  cursor: pointer;
-  box-shadow: var(--at-shadow);
-}
-
-/* Keep the sun and moon SVG icons clean */
-.topbar .theme-toggle svg {
-  width: 21px;
-  height: 21px;
-  display: block;
-  flex-shrink: 0;
-}
-
-/* Hover effect */
-.topbar .theme-toggle:hover {
-  background: var(--at-hover);
-  transform: translateY(-1px);
-}
-
-/* Mobile positioning */
-@media (max-width: 760px) {
-  .topbar .theme-toggle {
-    top: 10px !important;
-    right: 12px !important;
-  }
-
-  .topbar-right {
-    padding-right: 54px;
-  }
-}
-
-
-/* FINAL FIX: pin theme icon to the top-right of the viewport */
-.topbar .theme-toggle,
-.welcome-actions .theme-toggle {
-  position: fixed !important;
-  top: 12px !important;
-  right: 24px !important;
-  left: auto !important;
-  bottom: auto !important;
-  z-index: 99999 !important;
-
-  width: 42px !important;
-  height: 42px !important;
-  min-width: 42px !important;
-  min-height: 42px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background: var(--at-surface) !important;
-  color: var(--at-text) !important;
-  border: 1px solid var(--at-border) !important;
-  border-radius: 12px !important;
-  box-shadow: var(--at-shadow);
-  cursor: pointer;
-}
-
-.theme-toggle svg {
-  width: 21px;
-  height: 21px;
-  display: block;
-}
-
-/* Keep the header status text clear of the icon */
-.topbar-right {
-  padding-right: 58px;
-}
-
-
-
 /* ==========================================
    FIX: Job Details Popup in Dark Mode
    ========================================== */
-
 :root[data-theme="dark"] .modal-backdrop {
   background: rgba(0, 0, 0, 0.78) !important;
 }
@@ -716,16 +596,12 @@ tbody tr:hover {
   color: var(--at-text) !important;
 }
 
-
-
 /* Fix missing icons in the Job Details popup */
-
 :root[data-theme="dark"] .job-details-modal .job-metadata-card span,
 :root[data-theme="dark"] .job-details-modal .job-description-card span {
   color: inherit;
 }
 
-/* Restore icon visibility inside icon containers */
 :root[data-theme="dark"] .job-details-modal .job-metadata-card svg,
 :root[data-theme="dark"] .job-details-modal .job-description-card svg,
 :root[data-theme="dark"] .job-details-modal button svg {
@@ -734,7 +610,6 @@ tbody tr:hover {
   opacity: 1 !important;
 }
 
-/* Keep icon backgrounds visible */
 :root[data-theme="dark"] .job-details-modal .job-metadata-card [class*="icon"],
 :root[data-theme="dark"] .job-details-modal .job-description-card [class*="icon"] {
   background-color: #292448 !important;
@@ -742,7 +617,6 @@ tbody tr:hover {
   opacity: 1 !important;
 }
 
-/* Preserve the close button appearance */
 :root[data-theme="dark"] .job-details-modal .close-button {
   background: var(--at-surface-raised) !important;
   color: var(--at-text) !important;
@@ -753,22 +627,17 @@ tbody tr:hover {
   stroke: currentColor;
 }
 
-
 /* FIX: Pale status pill in the dark-mode application popup */
-
-/* Target the status pill inside the application details header */
 :root[data-theme="dark"] .job-details-modal .job-details-header > div,
 :root[data-theme="dark"] .job-details-modal .job-header > div {
   box-sizing: border-box;
 }
 
-/* Make pale status badges readable */
 :root[data-theme="dark"] .job-details-modal [class*="status"],
 :root[data-theme="dark"] .job-details-modal [class*="badge"] {
   color: #86efac !important;
 }
 
-/* Style the pill itself */
 :root[data-theme="dark"] .job-details-modal [class*="status-badge"],
 :root[data-theme="dark"] .job-details-modal [class*="status-pill"],
 :root[data-theme="dark"] .job-details-modal [class*="badge"] {
@@ -777,7 +646,6 @@ tbody tr:hover {
   color: #86efac !important;
 }
 
-/* Make any icon inside the pill visible */
 :root[data-theme="dark"] .job-details-modal [class*="status"] svg,
 :root[data-theme="dark"] .job-details-modal [class*="badge"] svg {
   color: #86efac !important;
@@ -787,20 +655,6 @@ tbody tr:hover {
 }
 
 /* Keep the company initial centered */
-:root[data-theme="dark"] .job-details-modal .company-avatar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-}
-
-
-/* ==========================================
-   1. FIX COMPANY INITIAL ALIGNMENT
-   ========================================== */
-
 :root[data-theme="dark"] .job-details-modal .company-avatar,
 :root[data-theme="dark"] .job-details-modal .job-company-icon {
   display: flex !important;
@@ -819,10 +673,7 @@ tbody tr:hover {
   line-height: 1 !important;
 }
 
-/* ==========================================
-   2. FIX COMPANY HEADING ALIGNMENT
-   ========================================== */
-
+/* Popup heading alignment */
 :root[data-theme="dark"] .job-details-modal .job-details-heading {
   align-items: center;
 }
@@ -830,12 +681,11 @@ tbody tr:hover {
 :root[data-theme="dark"] .job-details-modal .job-details-heading h1,
 :root[data-theme="dark"] .job-details-modal .job-details-heading h2 {
   margin-top: 0;
+  position: relative;
+  top: 27px;
 }
 
-/* ==========================================
-   3. DARK SCROLLBARS INSIDE THE POPUP
-   ========================================== */
-
+/* Dark scrollbars inside the popup */
 :root[data-theme="dark"] .job-details-modal,
 :root[data-theme="dark"] .job-details-modal * {
   scrollbar-color: #45536b #141d2e;
@@ -864,11 +714,109 @@ tbody tr:hover {
   background: #65748e;
 }
 
+/* ==========================================
+   FINAL THEME TOGGLE — single source of truth
+   ========================================== */
 
-
-/* Fine-tune company name vertical alignment in dark mode */
-:root[data-theme="dark"] .job-details-modal .job-details-heading h1,
-:root[data-theme="dark"] .job-details-modal .job-details-heading h2 {
+/* Header layout: keep tagline and toggle side by side */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   position: relative;
-  top: 27px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+  padding-right: 0 !important;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Small circular toggle, positioned within the header */
+.topbar .theme-toggle {
+  position: static !important;
+  inset: auto !important;
+  z-index: 1;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 0 0 4px !important;
+  padding: 0 !important;
+  border: 1px solid var(--at-border) !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+  background: var(--at-surface) !important;
+  color: var(--at-text) !important;
+  cursor: pointer;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Keep SVG icons visible */
+.topbar .theme-toggle svg {
+  display: block !important;
+  flex: 0 0 18px;
+  width: 18px !important;
+  height: 18px !important;
+  stroke: currentColor !important;
+  stroke-width: 2;
+  fill: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Light mode: light background and dark icon */
+:root[data-theme="light"] .topbar .theme-toggle,
+:root:not([data-theme="dark"]) .topbar .theme-toggle {
+  background: #ffffff !important;
+  color: #172033 !important;
+  border-color: #d8e0eb !important;
+}
+
+/* Dark mode: dark background and light icon */
+:root[data-theme="dark"] .topbar .theme-toggle {
+  background: #121a2b !important;
+  color: #edf2ff !important;
+  border-color: #2b3850 !important;
+}
+
+.topbar .theme-toggle:hover {
+  background: var(--at-hover) !important;
+  transform: none;
+}
+
+/* Smaller screens */
+@media (max-width: 600px) {
+  .topbar {
+    gap: 8px;
+  }
+
+  .topbar-right {
+    gap: 7px;
+    font-size: 12px;
+  }
+
+  .topbar .theme-toggle {
+    flex-basis: 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .topbar .theme-toggle svg {
+    width: 17px !important;
+    height: 10px !important;
+  }
 }

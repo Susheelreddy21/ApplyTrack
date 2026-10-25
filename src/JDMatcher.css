@@ -706,3 +706,100 @@
     min-height: 260px;
   }
 }
+
+
+/* JD Matcher results: dark theme */
+:root[data-theme="dark"] .jd-matcher-section .jd-results .jd-score-card,
+:root[data-theme="dark"] .jd-matcher-section .jd-results .jd-skill-card,
+:root[data-theme="dark"] .jd-matcher-section .jd-results .jd-suggestions-card {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #334155 !important;
+  box-shadow: none !important;
+}
+
+/* Make result headings readable */
+:root[data-theme="dark"] .jd-matcher-section .jd-results h3,
+:root[data-theme="dark"] .jd-matcher-section .jd-results h3 span {
+  color: #f1f5f9 !important;
+}
+
+/* Report description and supporting text */
+:root[data-theme="dark"] .jd-matcher-section .jd-score-copy p,
+:root[data-theme="dark"] .jd-matcher-section .jd-score-copy small,
+:root[data-theme="dark"] .jd-matcher-section .jd-skill-card p,
+:root[data-theme="dark"] .jd-matcher-section .jd-suggestions-card li,
+:root[data-theme="dark"] .jd-matcher-section .jd-suggestions-card li span {
+  color: #cbd5e1 !important;
+}
+
+/* Match score circle */
+:root[data-theme="dark"] .jd-matcher-section .jd-score-circle > div {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Keep matching skill chips green */
+:root[data-theme="dark"] .jd-matcher-section .jd-chip-match {
+  background: #123b2b !important;
+  color: #86efac !important;
+  border-color: #276749 !important;
+}
+
+/* Keep missing skill chips amber */
+:root[data-theme="dark"] .jd-matcher-section .jd-chip-missing {
+  background: #422b16 !important;
+  color: #fcd34d !important;
+  border-color: #92400e !important;
+}
+
+/* Count badges */
+:root[data-theme="dark"] .jd-matcher-section .jd-count {
+  background: #312e5b !important;
+  color: #c4b5fd !important;
+}
+
+
+
+/* Fix score text visibility in dark mode */
+:root[data-theme="dark"] .jd-matcher-section .jd-score-circle strong {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .jd-score-circle span {
+  color: #cbd5e1 !important;
+  opacity: 1 !important;
+}
+
+/* Improve report text contrast */
+:root[data-theme="dark"] .jd-matcher-section .jd-score-copy h3 {
+  color: #f1f5f9 !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .jd-score-copy > p:not(.eyebrow) {
+  color: #cbd5e1 !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .jd-score-copy small {
+  color: #cbd5e1 !important;
+}
+
+/* Purple buttons in dark mode */
+:root[data-theme="dark"] .jd-matcher-section .jd-form-actions .secondary-button {
+  background: #6d4aff !important;
+  color: #ffffff !important;
+  border: 1px solid #8065ff !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .jd-form-actions .primary-button {
+  background: #5b3bd6 !important;
+  color: #ffffff !important;
+  border: 1px solid #8b70ff !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .jd-form-actions button:hover {
+  background: #5b3bd6 !important;
+  color: #ffffff !important;
+}

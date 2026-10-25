@@ -1,8 +1,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
-import './theme.css';
 import JDMatcher from './JDMatcher';
+import Login from './auth/Login';
+import Register from './auth/Register';
 
 
 const API_URL =
@@ -32,6 +33,10 @@ function formatDate(value) {
 
 function App() {
   const [jobs, setJobs] = useState([]);
+  const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState('login');
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState('');
   const [theme, setTheme] = useState(() => {
   return localStorage.getItem('applytrack-theme') || 'light';
 });
@@ -98,44 +103,95 @@ const toggleTheme = () => {
     });
   }, [jobs, search, statusFilter]);
 
-  // Fetch applications from the Express backend.
+  // Restore the session before loading private application data.
   useEffect(() => {
     let active = true;
 
-    async function loadJobs() {
+    async function restoreSession() {
       try {
-        setApiError('');
+        const response = await fetch(`${API_URL}/auth/me`, {
+          credentials: 'include',
+        });
 
-        const response = await fetch(`${API_URL}/jobs`);
-
-        if (!response.ok) {
-          throw new Error('Could not load applications.');
-        }
+        if (response.status === 401) return;
+        if (!response.ok) throw new Error('Could not verify your session.');
 
         const data = await response.json();
-
+        if (active) setUser(data.user);
+      } catch (error) {
+        console.error('Session restoration failed:', error);
         if (active) {
-          setJobs(Array.isArray(data) ? data : []);
+          setAuthError('Could not connect to ApplyTrack. Make sure the backend is running.');
         }
+      } finally {
+        if (active) setAuthLoading(false);
+      }
+    }
+
+    restoreSession();
+    return () => { active = false; };
+  }, []);
+
+  // Fetch only the authenticated user's applications.
+  useEffect(() => {
+    let active = true;
+
+    if (!user) {
+      setJobs([]);
+      setIsLoading(false);
+      return () => { active = false; };
+    }
+
+    async function loadJobs() {
+      setIsLoading(true);
+      try {
+        setApiError('');
+        const response = await fetch(`${API_URL}/jobs`, {
+          credentials: 'include',
+        });
+
+        if (response.status === 401) {
+          if (active) {
+            setUser(null);
+            setAuthMode('login');
+            setAuthError('Your session expired. Please sign in again.');
+          }
+          return;
+        }
+        if (!response.ok) throw new Error('Could not load applications.');
+
+        const data = await response.json();
+        if (active) setJobs(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(error);
-
-        if (active) {
-          setApiError(
-            'Could not connect to the backend. Make sure your server and MySQL are running.'
-          );
-        }
+        if (active) setApiError('Could not connect to the backend. Make sure your server and MySQL are running.');
       } finally {
         if (active) setIsLoading(false);
       }
     }
 
     loadJobs();
+    return () => { active = false; };
+  }, [user]);
 
-    return () => {
-      active = false;
-    };
-  }, []);
+  async function logout() {
+    try {
+      const response = await fetch(`${API_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!response.ok && response.status !== 401) {
+        throw new Error('Could not log out. Please try again.');
+      }
+      setUser(null);
+      setJobs([]);
+      setAuthMode('login');
+      setAuthError('');
+      setApiError('');
+    } catch (error) {
+      setApiError(error.message || 'Could not log out.');
+    }
+  }
 
   // Add a new application or edit an existing application.
   async function saveApplication(application) {
@@ -150,6 +206,7 @@ const toggleTheme = () => {
 
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -203,6 +260,7 @@ const toggleTheme = () => {
 
       const response = await fetch(`${API_URL}/jobs/${id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -252,6 +310,7 @@ const toggleTheme = () => {
 
       const response = await fetch(`${API_URL}/jobs/${job.id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
 
       const result = await response.json().catch(() => ({}));
@@ -276,6 +335,43 @@ const toggleTheme = () => {
   function openNewForm() {
     setEditingJob(null);
     setShowForm(true);
+  }
+
+  if (authLoading) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <div className="auth-brand">ApplyTrack</div>
+          <p>Checking your session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    if (authError && !authError.toLowerCase().includes('session expired')) {
+      return (
+        <div className="auth-page">
+          <div className="auth-card">
+            <div className="auth-brand">ApplyTrack</div>
+            <p className="auth-error" role="alert">{authError}</p>
+            <button type="button" onClick={() => window.location.reload()}>Retry</button>
+          </div>
+        </div>
+      );
+    }
+
+    return authMode === 'register' ? (
+      <Register
+        onRegister={(newUser) => { setAuthError(''); setUser(newUser); }}
+        onSwitchToLogin={() => { setAuthError(''); setAuthMode('login'); }}
+      />
+    ) : (
+      <Login
+        onLogin={(loggedInUser) => { setAuthError(''); setUser(loggedInUser); }}
+        onSwitchToRegister={() => { setAuthError(''); setAuthMode('register'); }}
+      />
+    );
   }
 
   return (
@@ -324,15 +420,15 @@ const toggleTheme = () => {
 
         <div className="sidebar-profile">
           <div className="profile-avatar" aria-hidden="true">
-            S
+            {(user.name || user.email || 'U').trim().charAt(0).toUpperCase()}
           </div>
           <div className="profile-copy">
-            <strong>Job Seeker</strong>
-            <span>Personal workspace</span>
+            <strong>{user.name || 'Job Seeker'}</strong>
+            <span>{user.email}</span>
           </div>
-          <span className="profile-menu" aria-hidden="true">
-            •••
-          </span>
+          <button type="button" className="profile-menu" onClick={logout} aria-label="Log out" title="Log out">
+            ↪
+          </button>
         </div>
       </aside>
 
@@ -342,12 +438,40 @@ const toggleTheme = () => {
             <span>Workspace</span>
             <span className="breadcrumb-separator">/</span>
             <strong>Dashboard</strong>
+
+
+            
           </div>
+
+          
 
           <div className="topbar-right">
             <span className="live-dot" />
             Your career, organized
+
+            <button
+  type="button"
+  className="theme-toggle"
+  onClick={toggleTheme}
+  aria-label={
+    theme === 'light'
+      ? 'Switch to dark mode'
+      : 'Switch to light mode'
+  }
+  title={
+    theme === 'light'
+      ? 'Switch to dark mode'
+      : 'Switch to light mode'
+  }
+>
+  <span aria-hidden="true">
+    {theme === 'light' ? '☾' : '☀'}
+  </span>
+</button>
           </div>
+
+          
+
         </header>
 
         <div className="page-content">
@@ -365,38 +489,14 @@ const toggleTheme = () => {
               </p>
             </div>
 
-            <div className="welcome-actions">
-              
-
-<button
-  type="button"
-  className="theme-toggle"
-  onClick={toggleTheme}
-  aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-  title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
->
-  {theme === 'light' ? (
-    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
-    </svg>
-  )}
-</button>
-
-
-
-              <button
+            <button
               className="primary-button add-button"
               onClick={openNewForm}
             >
               <span aria-hidden="true">＋</span>
               Add application
-              </button>
-            </div>
+            </button>
+            
           </section>
 
           {apiError && (
@@ -989,6 +1089,15 @@ function OutcomeItem({ label, value, total, tone }) {
 }
 
 function ApplicationForm({ onSave, onClose, initialJob }) {
+  // Read the app's active theme so modal fields stay readable in both modes.
+  const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+  const formControlStyle = {
+    backgroundColor: isDarkTheme ? '#1e293b' : '#ffffff',
+    color: isDarkTheme ? '#f1f5f9' : '#1f2937',
+    borderColor: isDarkTheme ? '#475569' : '#d1d5db',
+    colorScheme: isDarkTheme ? 'dark' : 'light',
+  };
+
   const [company, setCompany] = useState(initialJob?.company ?? '');
   const [role, setRole] = useState(initialJob?.role ?? '');
   const [description, setDescription] = useState(
@@ -1086,6 +1195,7 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
           </label>
           <input
             id="company"
+            style={formControlStyle}
             value={company}
             onChange={(event) => setCompany(event.target.value)}
             placeholder="e.g. IBM"
@@ -1099,6 +1209,7 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
           </label>
           <input
             id="role"
+            style={formControlStyle}
             value={role}
             onChange={(event) => setRole(event.target.value)}
             placeholder="e.g. Associate Engineer"
@@ -1111,6 +1222,7 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
 </label>
 <textarea
   id="description"
+  style={formControlStyle}
   value={description}
   onChange={(event) => setDescription(event.target.value)}
   placeholder="Paste the full job description here..."
@@ -1123,6 +1235,7 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
           <input
             id="date"
             type="date"
+            style={formControlStyle}
             value={date}
             onChange={(event) => setDate(event.target.value)}
             required
@@ -1131,6 +1244,7 @@ function ApplicationForm({ onSave, onClose, initialJob }) {
           <label htmlFor="status">Application status</label>
           <select
             id="status"
+            style={formControlStyle}
             value={status}
             onChange={(event) => setStatus(event.target.value)}
           >

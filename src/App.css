@@ -1743,11 +1743,11 @@ body {
 
 
 
+/* Job description field — supports both themes */
 .form-modal textarea#description {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #243047 !important;
-  border: 1px solid #d8deea !important;
+  background: var(--surface, #ffffff);
+  color: var(--ink, #20243a);
+  border: 1px solid var(--line, #e9eaf2);
   border-radius: 8px;
   padding: 12px 14px;
   width: 100%;
@@ -1759,14 +1759,25 @@ body {
   resize: vertical;
 }
 
+:root[data-theme="dark"] .form-modal textarea#description {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
 .form-modal textarea#description::placeholder {
-  color: #929bad !important;
+  color: #929bad;
   opacity: 1;
+}
+
+:root[data-theme="dark"] .form-modal textarea#description::placeholder {
+  color: #94a3b8 !important;
 }
 
 .form-modal textarea#description:focus {
   outline: none;
-  border-color: #7866e8 !important;
+  border-color: #7866e8;
 }
 
 
@@ -2822,4 +2833,160 @@ textarea,
     flex-wrap: wrap;
     gap: 14px;
   }
+}
+
+
+
+/* Match Add application button to the progress heading */
+.add-button {
+  background: linear-gradient(135deg, #7654e8, #6550d9);
+  color: #ffffff;
+  border: 1px solid rgba(170, 140, 255, 0.45);
+}
+
+.add-button:hover {
+  background: linear-gradient(135deg, #8568f2, #765ee8);
+}
+
+
+
+/* JD Matcher — dark mode */
+:root[data-theme="dark"] .jd-matcher-section {
+  background: var(--at-surface, #151f30) !important;
+  color: var(--at-text, #edf2ff) !important;
+  border-color: var(--at-border, #334155) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section h2,
+:root[data-theme="dark"] .jd-matcher-section h3,
+:root[data-theme="dark"] .jd-matcher-section label {
+  color: var(--at-text, #edf2ff) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section .panel-subtitle,
+:root[data-theme="dark"] .jd-matcher-section .jd-field-hint {
+  color: var(--at-text-muted, #aab7cc) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section textarea,
+:root[data-theme="dark"] .jd-matcher-section input[type="file"],
+:root[data-theme="dark"] .jd-matcher-section .jd-upload-control {
+  background: var(--at-surface-raised, #1a2539) !important;
+  color: var(--at-text, #edf2ff) !important;
+  border-color: var(--at-border, #394760) !important;
+}
+
+:root[data-theme="dark"] .jd-matcher-section textarea::placeholder {
+  color: #9aa9c1 !important;
+  opacity: 1;
+}
+
+
+
+/* Fix JD Matcher icon visibility in dark mode */
+:root[data-theme="dark"] .jd-matcher-icon {
+  background: #293653 !important;
+  color: #c4b5fd !important;
+  border: 1px solid #465575;
+  border-radius: 12px;
+}
+
+
+/* ApplyTrack: Add/Edit Application modal in dark mode */
+:root[data-theme="dark"] .form-modal {
+  background: #151f30 !important;
+  color: #edf2ff !important;
+  border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .form-modal .modal-header h2 {
+  color: #edf2ff !important;
+}
+
+:root[data-theme="dark"] .form-modal .eyebrow {
+  color: #a5b4fc !important;
+}
+
+:root[data-theme="dark"] .form-modal .panel-subtitle {
+  color: #b8c5da !important;
+}
+
+:root[data-theme="dark"] .form-modal label {
+  color: #d4dced !important;
+}
+
+:root[data-theme="dark"] .form-modal label span {
+  color: #fb7185 !important;
+}
+
+:root[data-theme="dark"] .form-modal input,
+:root[data-theme="dark"] .form-modal textarea,
+:root[data-theme="dark"] .form-modal select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] .form-modal input::placeholder,
+:root[data-theme="dark"] .form-modal textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+:root[data-theme="dark"] .form-modal select option {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+:root[data-theme="dark"] .form-modal .close-button {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .form-modal .form-error {
+  color: #fda4af;
+}
+
+
+
+
+.form-modal textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--surface, #ffffff);
+  color: var(--text, #1f2937);
+  border: 1px solid var(--border, #e5e7eb);
+}
+
+:root[data-theme="dark"] .form-modal textarea {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+:root[data-theme="dark"] .form-modal textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+
+
+/* Application modal buttons — dark theme */
+:root[data-theme="dark"] .form-modal .secondary-button {
+  background: #7655e8 !important;
+  color: #ffffff !important;
+  border: 1px solid #8b70ff !important;
+}
+
+:root[data-theme="dark"] .form-modal .primary-button {
+  background: #7655e8 !important;
+  color: #ffffff !important;
+  border: 1px solid #8b70ff !important;
+}
+
+:root[data-theme="dark"] .form-modal button:hover {
+  background: #5b3bd6 !important;
+  color: #ffffff !important;
 }
