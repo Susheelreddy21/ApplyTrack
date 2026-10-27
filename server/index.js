@@ -37,6 +37,8 @@ const sessionStore = new MySQLStore({
   }
 });
 
+app.set('trust proxy', 1);
+
 app.use(session({
   name: 'applytrack.sid',
   secret: process.env.SESSION_SECRET,
@@ -45,8 +47,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
